@@ -1,17 +1,15 @@
 import React from 'react';
-import './App.css';
+import './adminlte.min.css'
+import Navbar from './components/Navbar';
+import ContentWrapper from './components/ContentWrapper';
+import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        
-          Learn React
-       
-      </header>
+    <div className='wrapper'>
+      <Navbar/>
+      <ContentWrapper/>
+      <Footer/>
     </div>
   );
 }
