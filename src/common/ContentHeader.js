@@ -7,7 +7,7 @@ class ContentHeader extends Component{
             <div className="container-fluid">
               <div className="row mb-2">
                 <div className="col-sm-6">
-                  <h1>신고목록</h1>
+                  <h1>{this.props.title}</h1>
                 </div>
               </div>
             </div>
