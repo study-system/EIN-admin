@@ -55,7 +55,7 @@ class List extends Component{
           </table>
         </div>
         <div className="card-footer clearfix">
-          <Pagination/>
+          <Pagination pageInfo={this.props.pageInfo}/>
         </div>
       </div>
     )

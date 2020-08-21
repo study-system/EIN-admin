@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import ContentBody from './ContentBody';
 import ContentHeader from './ContentHeader';
 
-class Content extends Component{
+class ContentWrapper extends Component{
 
   render(){
       return (
@@ -14,4 +14,4 @@ class Content extends Component{
   }
 }
 
-export default Content
+export default ContentWrapper

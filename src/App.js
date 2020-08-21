@@ -8,8 +8,9 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import { Blacklist } from './components/Blacklist';
+import Blacklist from './components/Blacklist';
 import { Board } from './components/Board';
+
 
 class App extends Component {
   constructor(props){
@@ -33,7 +34,7 @@ class App extends Component {
     return (
       <Router>
         <div className='wrapper'>
-          <Navbar routeInfo={this.routeInfo}/>    
+          <Navbar routeInfo={this.routeInfo}/>
           <Switch>
             <Route exact path="/" >
               <h1>교육정보 알리미</h1>

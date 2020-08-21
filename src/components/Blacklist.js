@@ -3,11 +3,12 @@ import List from '../common/List'
 import config from '../config'
 import axios  from 'axios';
 
+import {  withRouter } from "react-router-dom";
 
-export class Blacklist extends Component{
+class Blacklist extends Component{
   constructor(props){
     super(props);
-    this.state = {contents:[]}
+    this.state = {contents:[], pageInfo:{}}
   }
   agreeBtn =(id)=> {
     return(
@@ -18,8 +19,19 @@ export class Blacklist extends Component{
   }
 
   async componentDidMount(){
-    const res = await axios.get(config.host+'/blacklist')
-    this.setState({contents:res.data.contents})
+    this.fetchData();
+  }
+
+  fetchData = async (page = 1) => {
+    const res = await axios.get(config.host+'/blacklist?page='+page)
+    this.setState({contents:res.data.contents, pageInfo:res.data.pageInfo})
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot){
+    const prePage = prevProps.location.state.page
+    const currentPage = this.props.location.state.page
+    if(prePage !== currentPage)
+      this.fetchData(currentPage)
   }
 
   onClickAgree = async(e) =>{
@@ -35,17 +47,19 @@ export class Blacklist extends Component{
   render(){
       return (
         <div >
-          <List url={config.host+'/blacklist'} data={this.state.contents} fields={[
+          <List data={this.state.contents} fields={[
             {name:'id', title:'id'},
             {name:'user_email', title:'신고자'},
             {name:'content', title:'내용'},
             {name:'blacklist_email', title:'신고대상'},
             {name:'create_at', title:'신고일'},
             {name:'agree', title:'동의여부'},
-            {title:'동의', customContent:this.agreeBtn},
-            ]}/>
+            {title:'동의', customContent:this.agreeBtn},]}
+            pageInfo={this.state.pageInfo}
+            />
         </div>       
       )
   }
 }
 
+export default withRouter(Blacklist)
