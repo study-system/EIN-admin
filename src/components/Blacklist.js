@@ -6,6 +6,13 @@ import axios  from 'axios';
 import {  withRouter } from "react-router-dom";
 
 class Blacklist extends Component{
+  static defaultProps ={
+    location: {
+        state: {
+          page: 1
+        }
+    }
+  }
   constructor(props){
     super(props);
     this.state = {contents:[], pageInfo:{}}
@@ -28,10 +35,10 @@ class Blacklist extends Component{
   }
 
   componentDidUpdate(prevProps, prevState, snapshot){
-    const prePage = prevProps.location.state.page
-    const currentPage = this.props.location.state.page
-    if(prePage !== currentPage)
-      this.fetchData(currentPage)
+    if(prevProps !== this.props && !!this.props.location.state){
+      const currentPage = this.props.location.state.page
+        this.fetchData(currentPage)
+    }
   }
 
   onClickAgree = async(e) =>{
