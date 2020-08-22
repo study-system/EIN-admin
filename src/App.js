@@ -6,10 +6,11 @@ import Footer from './components/Footer';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
 } from "react-router-dom";
 import Blacklist from './components/Blacklist';
 import Board from './components/Board';
+import Login, { PrivateRoute } from './components/Login';
 
 class App extends Component {
   constructor(props){
@@ -22,25 +23,30 @@ class App extends Component {
 
   genericRoute(){
     return this.routeInfo.map((info, idx)=>
-      <Route key={info.path + idx} path={info.path}>
+      <PrivateRoute key={info.path + idx} path={info.path} authenticated={this.authenticated}>
         <ContentWrapper component={info.component} title={info.title} />
-      </Route>
+      </PrivateRoute>
     )
   }
 
   render(){
     return (
       <Router>
-        <div className='wrapper'>
-          <Navbar routeInfo={this.routeInfo}/>
-          <Switch>
-            <Route exact path="/" >
-              <h1>교육정보 알리미</h1>
-            </Route>
-            {this.genericRoute()}
-          </Switch>
-          <Footer/>
-        </div>
+        <Switch>
+          <Route path="/login" >
+            <Login/>
+          </Route>
+          <>
+            <div className='wrapper'>
+              <Navbar routeInfo={this.routeInfo}/>
+                <PrivateRoute exact path="/">
+                  <h1>교육정보 알리미</h1>
+                </PrivateRoute>
+                {this.genericRoute()}
+              <Footer/>
+            </div>
+          </>
+        </Switch>
       </Router>
     )}
 }

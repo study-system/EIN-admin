@@ -8,7 +8,7 @@ import queryString from 'query-string'
 class Blacklist extends Component{
   constructor(props){
     super(props);
-    this.state = {contents:[], pageInfo:{}, query:{status:'null'}}
+    this.state = {contents:[], pageInfo:{}, query:{}}
   }
   agreeBtn =(id)=> {
     return(
@@ -23,7 +23,7 @@ class Blacklist extends Component{
   }
 
   fetchData = async (page = 1) => {
-    const res = await axios.get(config.host+'/blacklist?page='+page+'&'+queryString.stringify(this.state.query))
+    const res = await axios.get(config.host+'/blacklist?page='+page+'&'+queryString.stringify(this.state.query),{withCredentials:true})
     this.setState({contents:res.data.contents, pageInfo:res.data.pageInfo})
   }
 
@@ -39,7 +39,7 @@ class Blacklist extends Component{
     const target = e.target;
     const res = await axios.put(config.host+'/blacklist/'+target.id,{
       status: target.value
-    })
+    },{withCredentials:true})
     if(res.status === 204){
       this.setState({contents:this.state.contents.map(item => item.id === parseInt(target.id) ? {...item, agree: target.value} : item)})
     }
