@@ -11,13 +11,12 @@ import {
 import Blacklist from './components/Blacklist';
 import { Board } from './components/Board';
 
-
 class App extends Component {
   constructor(props){
     super(props)
     this.routeInfo=[
       {path:'/board', title:'게시글 목록', component: Board},
-      {path:'/blacklist', title:'신고 목록', component: Blacklist},
+      {path:'/blacklist', title:'신고 목록', component: Blacklist, initState:{page:1}},
     ]
   }
 
@@ -28,7 +27,6 @@ class App extends Component {
       </Route>
     )
   }
-
 
   render(){
     return (

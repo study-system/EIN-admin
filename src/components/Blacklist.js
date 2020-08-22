@@ -2,17 +2,9 @@ import React, {Component} from 'react'
 import List from '../common/List'
 import config from '../config'
 import axios  from 'axios';
-
 import {  withRouter } from "react-router-dom";
 
 class Blacklist extends Component{
-  static defaultProps ={
-    location: {
-        state: {
-          page: 1
-        }
-    }
-  }
   constructor(props){
     super(props);
     this.state = {contents:[], pageInfo:{}}
@@ -26,7 +18,7 @@ class Blacklist extends Component{
   }
 
   async componentDidMount(){
-    this.fetchData();
+    this.fetchData(!!this.props.location.state ? this.props.location.state.page : 1 );
   }
 
   fetchData = async (page = 1) => {
@@ -35,9 +27,10 @@ class Blacklist extends Component{
   }
 
   componentDidUpdate(prevProps, prevState, snapshot){
-    if(prevProps !== this.props && !!this.props.location.state){
-      const currentPage = this.props.location.state.page
-        this.fetchData(currentPage)
+    if(!this.props.location.state){
+      return;
+    }else if( !prevProps.location.state || (prevProps.location.state.page !== this.props.location.state.page)){
+      this.fetchData(this.props.location.state.page)
     }
   }
 
