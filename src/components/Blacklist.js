@@ -3,11 +3,12 @@ import List from '../common/List'
 import config from '../config'
 import axios  from 'axios';
 import { withRouter } from "react-router-dom";
+import queryString from 'query-string'
 
 class Blacklist extends Component{
   constructor(props){
     super(props);
-    this.state = {contents:[], pageInfo:{}, status:'null'}
+    this.state = {contents:[], pageInfo:{}, query:{status:'null'}}
   }
   agreeBtn =(id)=> {
     return(
@@ -22,15 +23,14 @@ class Blacklist extends Component{
   }
 
   fetchData = async (page = 1) => {
-    console.log('fetch!!!')
-    const res = await axios.get(config.host+'/blacklist?page='+page+'&status='+this.state.status)
+    const res = await axios.get(config.host+'/blacklist?page='+page+'&'+queryString.stringify(this.state.query))
     this.setState({contents:res.data.contents, pageInfo:res.data.pageInfo})
   }
 
   componentDidUpdate(prevProps, prevState, snapshot){
     if(!this.props.location.state){
       return;
-    }else if(prevState.status !== this.state.status ||!prevProps.location.state || (prevProps.location.state.page !== this.props.location.state.page)){
+    }else if(prevState.query !== this.state.query ||!prevProps.location.state || (prevProps.location.state.page !== this.props.location.state.page)){
       this.fetchData(this.props.location.state.page)
     }
   }
@@ -46,7 +46,12 @@ class Blacklist extends Component{
   }
 
   onChangeFilter = (name, value) => {
-    this.setState((pre)=>({...pre, status:value}))
+    let query ={status: value}
+    if(value === 'null')
+      delete query.status;
+    this.setState((pre)=>({...pre, query: query}), ()=>{
+      this.props.history.replace({state:{page:1}})
+    })
   }
 
   render(){
@@ -65,10 +70,9 @@ class Blacklist extends Component{
             pageInfo={this.state.pageInfo}
             filterData={[
               {title:'동의여부', options:[
-                {name:'--', id: 'null'}, 
                 {name:'yes', id: 'yes'}, 
                 {name:'no', id: 'no'}, 
-              ], url:'http://myks790.iptime.org:8082/board/major'}
+              ]}
             ]}
             onChangeFilter={this.onChangeFilter}
           />

@@ -28,11 +28,11 @@ class Select extends Component{
     }
 
     render(){
-        const Content = this.props.component
         return (
-            <div className="form-group col-sm-2">
+            <div className="form-group col-sm-2 float-left">
                 <label>{this.props.title}</label>
                 <select className="form-control" onChange={this.onChange} name={this.props.title}>
+                    <option value={'null'}>--</option>
                     {this.inflateOption(!!this.props.options ? this.props.options : this.state.options)}
                 </select>
             </div>

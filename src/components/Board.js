@@ -1,12 +1,86 @@
 import React, {Component} from 'react'
+import List from '../common/List'
+import config from '../config'
+import axios  from 'axios';
+import { withRouter } from "react-router-dom";
+import queryString from 'query-string'
 
-export class Board extends Component{
+class Board extends Component{
+  constructor(props){
+    super(props);
+    this.state = {contents:[], pageInfo:{}, query:{auth:'yes'}}
+  }
+
+  async componentDidMount(){
+    this.fetchData(!!this.props.location.state ? this.props.location.state.page : 1 );
+  }
   
-    render(){
-        return (
-          <div >
-            board
-          </div>       
-        )
+  fetchData = async (page = 1) => {
+    const res = await axios.get(config.host+'/board?page='+page+'&'+queryString.stringify(this.state.query))
+    this.setState((pre)=>({...pre, contents: res.data.contents, pageInfo: res.data.pageInfo}))
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot){
+    if(prevState.query !== this.state.query || (!prevProps.location.state && !!this.props.location.state) || (!!prevProps.location.state && (prevProps.location.state.page !== this.props.location.state.page))){
+      this.fetchData(!!this.props.location.state ? this.props.location.state.page : 1 )
     }
+  }
+
+  onChangeFilter = (name, value) => {
+    let field = '';
+    switch(name){
+      case '인증 게시판 여부':
+        field='auth'
+        break;
+      case '지역':
+        field='location_id'
+        break;
+      case '분야':
+        field='major_id'
+        break;
+      case '대상':
+        field='target_id'
+        break;
+      default:
+        field='error'   
+    }
+    this.setState((pre)=>{
+      const query = {...pre.query}
+      if(value === 'null'){
+        delete query[field]
+      }else{
+        query[field] = value;
+      }
+      return {...pre, query: query}
+    },()=>{
+      this.props.history.replace({state:{page:1}})
+    })
+  }
+
+  render(){
+      return (
+        <div >
+          <List data={this.state.contents} 
+            fields={[
+              {name:'id', title:'id'},
+              {name:'title', title:'제목'},
+              {name:'nickname', title:'내용'},
+            ]}
+            pageInfo={this.state.pageInfo}
+            filterData={[
+              {title:'인증 게시판 여부', options:[
+                {name:'yes', id: 'yes'}, 
+                {name:'no', id: 'no'}, 
+              ]},
+              {title:'지역',url:config.host+"/board/location"},
+              {title:'분야',url:config.host+"/board/major"},
+              {title:'대상', url:config.host+"/board/target"},
+            ]}
+            onChangeFilter={this.onChangeFilter}
+          />
+        </div>       
+      )
+  }
 }
+
+export default withRouter(Board)

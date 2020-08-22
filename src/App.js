@@ -9,7 +9,7 @@ import {
   Route
 } from "react-router-dom";
 import Blacklist from './components/Blacklist';
-import { Board } from './components/Board';
+import Board from './components/Board';
 
 class App extends Component {
   constructor(props){
