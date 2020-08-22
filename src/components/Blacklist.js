@@ -2,12 +2,12 @@ import React, {Component} from 'react'
 import List from '../common/List'
 import config from '../config'
 import axios  from 'axios';
-import {  withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class Blacklist extends Component{
   constructor(props){
     super(props);
-    this.state = {contents:[], pageInfo:{}}
+    this.state = {contents:[], pageInfo:{}, status:'null'}
   }
   agreeBtn =(id)=> {
     return(
@@ -22,14 +22,15 @@ class Blacklist extends Component{
   }
 
   fetchData = async (page = 1) => {
-    const res = await axios.get(config.host+'/blacklist?page='+page)
+    console.log('fetch!!!')
+    const res = await axios.get(config.host+'/blacklist?page='+page+'&status='+this.state.status)
     this.setState({contents:res.data.contents, pageInfo:res.data.pageInfo})
   }
 
   componentDidUpdate(prevProps, prevState, snapshot){
     if(!this.props.location.state){
       return;
-    }else if( !prevProps.location.state || (prevProps.location.state.page !== this.props.location.state.page)){
+    }else if(prevState.status !== this.state.status ||!prevProps.location.state || (prevProps.location.state.page !== this.props.location.state.page)){
       this.fetchData(this.props.location.state.page)
     }
   }
@@ -44,19 +45,33 @@ class Blacklist extends Component{
     }
   }
 
+  onChangeFilter = (name, value) => {
+    this.setState((pre)=>({...pre, status:value}))
+  }
+
   render(){
       return (
         <div >
-          <List data={this.state.contents} fields={[
-            {name:'id', title:'id'},
-            {name:'user_email', title:'신고자'},
-            {name:'content', title:'내용'},
-            {name:'blacklist_email', title:'신고대상'},
-            {name:'create_at', title:'신고일'},
-            {name:'agree', title:'동의여부'},
-            {title:'동의', customContent:this.agreeBtn},]}
+          <List data={this.state.contents} 
+            fields={[
+              {name:'id', title:'id'},
+              {name:'user_email', title:'신고자'},
+              {name:'content', title:'내용'},
+              {name:'blacklist_email', title:'신고대상'},
+              {name:'create_at', title:'신고일'},
+              {name:'agree', title:'동의여부'},
+              {title:'동의', customContent:this.agreeBtn},
+            ]}
             pageInfo={this.state.pageInfo}
-            />
+            filterData={[
+              {title:'동의여부', options:[
+                {name:'--', id: 'null'}, 
+                {name:'yes', id: 'yes'}, 
+                {name:'no', id: 'no'}, 
+              ], url:'http://myks790.iptime.org:8082/board/major'}
+            ]}
+            onChangeFilter={this.onChangeFilter}
+          />
         </div>       
       )
   }
