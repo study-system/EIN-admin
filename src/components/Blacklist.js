@@ -45,10 +45,11 @@ class Blacklist extends Component{
     }
   }
 
-  onChangeFilter = (name, value) => {
-    let query ={status: value}
+  onChangeFilter = (field, value) => {
+    let query={}
+    query[field] = value;
     if(value === 'null')
-      delete query.status;
+      delete query[field];
     this.setState((pre)=>({...pre, query: query}), ()=>{
       this.props.history.replace({state:{page:1}})
     })
@@ -69,7 +70,7 @@ class Blacklist extends Component{
             ]}
             pageInfo={this.state.pageInfo}
             filterData={[
-              {title:'동의여부', options:[
+              {title:'동의여부', fieldName:'status', options:[
                 {name:'yes', id: 'yes'}, 
                 {name:'no', id: 'no'}, 
               ]}

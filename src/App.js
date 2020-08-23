@@ -9,6 +9,7 @@ import {
   Route,
 } from "react-router-dom";
 import Blacklist from './components/Blacklist';
+import AuthUser from './components/AuthUser';
 import Board from './components/Board';
 import Login, { PrivateRoute } from './components/Login';
 
@@ -16,8 +17,9 @@ class App extends Component {
   constructor(props){
     super(props)
     this.routeInfo=[
-      {path:'/board', title:'게시글 목록', component: Board},
+      {path:'/board', title:'게시글 목록', component: Board, initState:{page:1}},
       {path:'/blacklist', title:'신고 목록', component: Blacklist, initState:{page:1}},
+      {path:'/authUser', title:'인증 유저 목록', component: AuthUser, initState:{page:1}},
     ]
   }
 

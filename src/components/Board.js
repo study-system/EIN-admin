@@ -26,24 +26,7 @@ class Board extends Component{
     }
   }
 
-  onChangeFilter = (name, value) => {
-    let field = '';
-    switch(name){
-      case '인증 게시판 여부':
-        field='auth'
-        break;
-      case '지역':
-        field='location_id'
-        break;
-      case '분야':
-        field='major_id'
-        break;
-      case '대상':
-        field='target_id'
-        break;
-      default:
-        field='error'   
-    }
+  onChangeFilter = (field, value) => {
     this.setState((pre)=>{
       const query = {...pre.query}
       if(value === 'null'){
@@ -68,13 +51,13 @@ class Board extends Component{
             ]}
             pageInfo={this.state.pageInfo}
             filterData={[
-              {title:'인증 게시판 여부', options:[
+              {title:'인증 게시판 여부', fieldName:'auth', options:[
                 {name:'yes', id: 'yes'}, 
                 {name:'no', id: 'no'}, 
               ]},
-              {title:'지역',url:config.host+"/board/location"},
-              {title:'분야',url:config.host+"/board/major"},
-              {title:'대상', url:config.host+"/board/target"},
+              {title:'지역', fieldName:'location_id', url:config.host+"/board/location"},
+              {title:'분야', fieldName:'major_id', url:config.host+"/board/major"},
+              {title:'대상', fieldName:'target_id', url:config.host+"/board/target"},
             ]}
             onChangeFilter={this.onChangeFilter}
           />
