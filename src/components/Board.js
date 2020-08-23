@@ -42,7 +42,7 @@ class Board extends Component{
 
   render(){
       return (
-        <div >
+        <>
           <List data={this.state.contents} 
             fields={[
               {name:'id', title:'id'},
@@ -61,7 +61,7 @@ class Board extends Component{
             ]}
             onChangeFilter={this.onChangeFilter}
           />
-        </div>       
+        </>       
       )
   }
 }

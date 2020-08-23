@@ -63,7 +63,7 @@ class AuthUser extends Component{
 
   render(){
       return (
-        <div >
+        <>
           <List data={this.state.contents} 
             fields={[
               {name:'id', title:'id'},
@@ -99,7 +99,7 @@ class AuthUser extends Component{
             ]}
             onChangeFilter={this.onChangeFilter}
           />
-        </div>       
+        </>       
       )
   }
 }

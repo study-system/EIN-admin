@@ -57,7 +57,7 @@ class Blacklist extends Component{
 
   render(){
       return (
-        <div >
+        <>
           <List data={this.state.contents} 
             fields={[
               {name:'id', title:'id'},
@@ -77,7 +77,7 @@ class Blacklist extends Component{
             ]}
             onChangeFilter={this.onChangeFilter}
           />
-        </div>       
+        </>       
       )
   }
 }
