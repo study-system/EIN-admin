@@ -68,7 +68,9 @@ class Editer extends Component{
     }
 
     onUploadFinish = (imageUrl) => {
-        this.setState((pre)=>({...pre, imageurl:imageUrl}));
+        setTimeout(()=>{
+            this.setState((pre)=>({...pre, imageurl:imageUrl}));
+        }, 1000)
     }
 
     onChangeTitle = (e) => {

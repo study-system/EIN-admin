@@ -3,7 +3,6 @@ import config from '../config'
 import axios  from 'axios';
 import FileUploader from './../common/FileUploader'
 
-
 class Popup extends Component{
     constructor(props){
         super(props)
@@ -26,12 +25,19 @@ class Popup extends Component{
             this.setState((pre)=>({...pre, active:value}));
         }
     }
-    onUploadFinish = (imageUrl) => {
-        this.setState((pre)=>({...pre, image:imageUrl}));
+
+    onUploadFinish = async (imageUrl) => {
+        const res = await axios.post(config.host+'/popup',{image:imageUrl},{withCredentials:true})
+        if(res.status === 201){
+            setTimeout(()=>{
+                this.setState((pre)=>({...pre, image:imageUrl}));
+            }, 1000)
+        }else{
+            this.props.onUploadFinish('', '팝업 이미지 변경 실패')
+        }
     }
     
     render(){
-        console.log('ren pop')
         const state = this.state;
         return(
             <div className="card">

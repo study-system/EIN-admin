@@ -24,19 +24,9 @@ export default class FileUploader extends Component{
     
             if(respone.status === 200){
                 const imgUrl = respone.data.imgUrl;
-                const res = await axios.post(config.host+'/popup',{image:imgUrl},{withCredentials:true})
-                if(res.status === 201){
-                    setTimeout(()=>{
-                        this.setState((pre)=>({...pre, image:imgUrl, uploadFlag:false}),()=>{
-                            this.props.onUploadFinish(imgUrl)
-                        });
-                    }, 1000)
-                        
-                }else{
-                    this.setState((pre)=>({...pre, uploadFlag:false}),()=>{
-                        this.props.onUploadFinish('', '팝업 이미지 변경 실패')
-                    });
-                }
+                this.setState((pre)=>({...pre, uploadFlag:false}),()=>{
+                    this.props.onUploadFinish(imgUrl)
+                });
             }else{
                 this.setState((pre)=>({...pre, uploadFlag:false}),()=>{
                     this.props.onUploadFinish('', '파일 업로드 실패')
