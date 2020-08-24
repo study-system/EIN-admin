@@ -8,8 +8,11 @@ class ContentWrapper extends Component{
           <div className="content-header">
             <div className="container-fluid">
               <div className="row mb-2">
-                <div className="col-sm-6">
+                <div className="col-sm-10">
                   <h1>{this.props.title}</h1>
+                </div>
+                <div className='col-sm-2'>
+                  {this.props.customButton}
                 </div>
               </div>
             </div>

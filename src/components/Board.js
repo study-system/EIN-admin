@@ -42,7 +42,7 @@ class Board extends Component{
 
   editLink =(id, title)=> {
     return(
-      <Link to={{pathname:'/board/'+id}}>{title}</Link>
+      <Link to={{pathname:'/board/'+id, state:{mode:'edit'}}}>{title}</Link>
     )
   }
 

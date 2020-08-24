@@ -23,8 +23,8 @@ class Editer extends Component{
         this.state = {
             // user_id: 1,
             title: "",
-            start_date: "",
-            end_date: "",
+            start_date: moment().toISOString(),
+            end_date: moment().toISOString(),
             content: "",
             imageurl: "",
             location_id: 0,
@@ -36,9 +36,11 @@ class Editer extends Component{
     }
 
     async componentDidMount(){
-        const res = await axios.get(config.host + this.props.location.pathname)
-        if(res.status === 200)
-            this.setState((pre)=>({...pre, ...res.data}))
+        if(this.props.location.state.mode === 'edit'){
+            const res = await axios.get(config.host + this.props.location.pathname)
+            if(res.status === 200)
+                this.setState((pre)=>({...pre, ...res.data}))
+        }
       }
 
     onChangeSelect = (field, value) => {
@@ -79,10 +81,23 @@ class Editer extends Component{
     }
 
     onClickEdit = async (e) => {
-        const res = await axios.put(config.host + this.props.location.pathname,this.state,{withCredentials:true})
-        console.log(res)
-        if(res.status === 204){
-            this.props.history.replace('/board',{ state: { page: 1 } });
+        if(this.props.location.state.mode === 'create'){
+            try {
+                const res = await axios.post(config.host + '/board',this.state,{withCredentials:true})
+                if(res.status === 201){
+                    this.props.history.replace('/board',{ state: { page: 1 } });
+                }else{
+                    alert('error')
+                }
+            } catch (error) {
+                alert(error)
+            }
+        }else{
+            const res = await axios.put(config.host + this.props.location.pathname,this.state,{withCredentials:true})
+            console.log(res)
+            if(res.status === 204){
+                this.props.history.replace('/board',{ state: { page: 1 } });
+            }
         }
     }
     
@@ -93,7 +108,7 @@ class Editer extends Component{
         return (
             <div className=''>
                 <div className='position-absolute col-12' style={{zIndex:1}}>{}
-                    <button type="button" className="btn btn-primary col-1 float-right mt-2 mr-3" onClick={this.onClickEdit}>작성/수정</button>
+                    <button type="button" className="btn btn-primary col-1 float-right mt-2 mr-3" onClick={this.onClickEdit}>{this.props.location.state.mode === 'edit' ? '수정':'작성'}</button>
                 </div>
                 <div className="card pt-5">
                     <div className="card-header">
