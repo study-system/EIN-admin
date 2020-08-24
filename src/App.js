@@ -12,6 +12,7 @@ import Blacklist from './components/Blacklist';
 import AuthUser from './components/AuthUser';
 import Board from './components/Board';
 import Popup from './components/Popup';
+import Editer from './components/Editer';
 import Login, { PrivateRoute } from './components/Login';
 
 class App extends Component {
@@ -27,7 +28,7 @@ class App extends Component {
 
   genericRoute(){
     return this.routeInfo.map((info, idx)=>
-      <PrivateRoute key={info.path + idx} path={info.path} authenticated={this.authenticated}>
+      <PrivateRoute key={info.path + idx} exact path={info.path}>
         <ContentWrapper component={info.component} title={info.title} />
       </PrivateRoute>
     )
@@ -45,6 +46,9 @@ class App extends Component {
               <Navbar routeInfo={this.routeInfo}/>
                 <PrivateRoute exact path="/">
                   <h1>교육정보 알리미</h1>
+                </PrivateRoute>
+                <PrivateRoute path={'/board/:boardId'}>
+                  <ContentWrapper component={Editer} title={'게시글 생성&수정'} />
                 </PrivateRoute>
                 {this.genericRoute()}
               <Footer/>

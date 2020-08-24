@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import config from '../config'
 import axios  from 'axios';
+import FileUploader from './../common/FileUploader'
+
 
 class Popup extends Component{
     constructor(props){
@@ -17,35 +19,6 @@ class Popup extends Component{
         this.setState(res.data)
     }
     
-    onClickUpload = (e)=>{
-        e.preventDefault();
-        const files = e.target[0].files;
-        if(files.length === 0 || this.state.uploadFlag)
-            return;
-        this.setState((pre)=>({...pre, uploadFlag:true}), async ()=>{
-            const file = files[0];
-            const fd = new FormData();
-            fd.append('file',file);
-            const respone = await axios.post(config.host+'/file', fd, {withCredentials:true})
-    
-            if(respone.status === 200){
-                const imgUrl = respone.data.imgUrl;
-                const res = await axios.post(config.host+'/popup',{image:imgUrl},{withCredentials:true})
-                if(res.status === 201){
-                    setTimeout(()=>{
-                        this.setState((pre)=>({...pre, image:imgUrl, uploadFlag:false}));
-                    }, 1000)
-                }else{
-                    alert('팝업 이미지 변경 실패');
-                    this.setState((pre)=>({...pre, uploadFlag:false}));
-                }
-            }else{
-                alert('파일 업로드 실패');
-                this.setState((pre)=>({...pre, uploadFlag:false}));
-            }
-        })
-    }
-    
     onChangeActive = async (e)=>{
         const value = e.target.value;
         const respone = await axios.put(config.host+'/popup',{active:value},{withCredentials:true})
@@ -53,8 +26,12 @@ class Popup extends Component{
             this.setState((pre)=>({...pre, active:value}));
         }
     }
+    onUploadFinish = (imageUrl) => {
+        this.setState((pre)=>({...pre, image:imageUrl}));
+    }
     
     render(){
+        console.log('ren pop')
         const state = this.state;
         return(
             <div className="card">
@@ -63,10 +40,7 @@ class Popup extends Component{
                         <img className='col-12' src={state.image} alt=''/>
                     </div>
                     <div className='float-left ml-4 mt-3'>
-                        <form method="post" encType="multipart/form-data" className='input-group-prepend' onSubmit={this.onClickUpload}>
-                            <input type="file" accept="image/png, image/jpeg"/>
-                            <input type="submit" className={"btn btn-block bg-gradient-success "+(state.uploadFlag?'disabled':'')}   value='업로드'/>
-                        </form>
+                        <FileUploader onUploadFinish={this.onUploadFinish}/>
                         <div className="btn-group btn-group-toggle row mt-3" data-toggle="buttons" value='no' onChange={this.onChangeActive}>
                             <label className={"btn btn-secondary"+(state.active ==='yes'?' active':'')}>
                                 <input type="radio" name="options" id="option1" value='yes'/> 활성화

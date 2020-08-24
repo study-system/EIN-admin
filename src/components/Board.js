@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import List from '../common/List'
 import config from '../config'
 import axios  from 'axios';
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import queryString from 'query-string'
 
 class Board extends Component{
@@ -21,7 +21,7 @@ class Board extends Component{
   }
 
   componentDidUpdate(prevProps, prevState, snapshot){
-    if(prevState.query !== this.state.query || (!prevProps.location.state && !!this.props.location.state) || (!!prevProps.location.state && (prevProps.location.state.page !== this.props.location.state.page))){
+    if(prevState.query !== this.state.query || (!prevProps.location.state && !!this.props.location.state) || (!!prevProps.location.state && !!this.props.location.state && (prevProps.location.state.page !== this.props.location.state.page))){
       this.fetchData(!!this.props.location.state ? this.props.location.state.page : 1 )
     }
   }
@@ -40,14 +40,20 @@ class Board extends Component{
     })
   }
 
+  editLink =(id, title)=> {
+    return(
+      <Link to={{pathname:'/board/'+id}}>{title}</Link>
+    )
+  }
+
   render(){
       return (
         <>
           <List data={this.state.contents} 
             fields={[
               {name:'id', title:'id'},
-              {name:'title', title:'제목'},
-              {name:'nickname', title:'내용'},
+              {name:'title', title:'제목', customContent:this.editLink},
+              {name:'nickname', title:'닉네임'},
             ]}
             pageInfo={this.state.pageInfo}
             filterData={[

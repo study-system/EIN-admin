@@ -10,6 +10,7 @@ class Blacklist extends Component{
     super(props);
     this.state = {contents:[], pageInfo:{}, query:{}}
   }
+  
   agreeBtn =(id)=> {
     return(
     <div className='btn-group'>
