@@ -21,6 +21,7 @@ class Editer extends Component{
     constructor(props){
         super(props)
         this.state = {
+            id:0,
             // user_id: 1,
             title: "",
             start_date: moment().toISOString(),
@@ -100,6 +101,19 @@ class Editer extends Component{
             }
         }
     }
+
+    onClickRemove = async (e) => {
+        try {
+            const res = await axios.delete(config.host + '/board/'+this.state.id, {withCredentials:true})
+            if(res.status === 204){
+                this.props.history.replace('/board',{ state: { page: 1 } });
+            }else{
+                alert('error')
+            }
+        } catch (error) {
+            alert(error)
+        }
+    }
     
     render() {
         const state =this.state
@@ -109,6 +123,7 @@ class Editer extends Component{
             <div className=''>
                 <div className='position-absolute col-12' style={{zIndex:1}}>{}
                     <button type="button" className="btn btn-primary col-1 float-right mt-2 mr-3" onClick={this.onClickEdit}>{this.props.location.state.mode === 'edit' ? '수정':'작성'}</button>
+                    {this.props.location.state.mode === 'edit' ? <button type="button" className="btn btn-danger col-1 float-right mt-2 mr-3" onClick={this.onClickRemove}>삭제</button>:''}
                 </div>
                 <div className="card pt-5">
                     <div className="card-header">
